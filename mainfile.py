@@ -74,13 +74,16 @@ def isolate_data(checked_rows, type_of_data) :
 
 # Handles the conversion of actual CSV files.
 def compare_df():
-    global imported_df
     global modified_df
 
-    print(imported_df.columns)
+    if modified_df is False:
+        print("There is not a database to export. Please import a file.")
+        return False
+
+    print(modified_df.columns)
 
     ref_column = input("Chose a column to use as a reference... ")
-    modified_df = imported_df.loc[: , ref_column]
+    modified_df = modified_df.loc[: , ref_column]
 
     if modified_df.empty :
         print("The column you chose lacks data.")
@@ -95,6 +98,9 @@ def compare_df():
 
 def prune_df_columns():
     global modified_df
+    if modified_df is False:
+        print("There is not a database to export. Please import a file.")
+        return False
 
     column_list = modified_df.columns.values.tolist()
     print(column_list)
@@ -162,6 +168,8 @@ def csv_menu():
 
     print(" ")
     csv_menu() 
+
+#API query to CSV.
 
 
 #This is used as a launchingpad to reach other parts of the program
