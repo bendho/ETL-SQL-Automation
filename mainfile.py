@@ -140,14 +140,32 @@ def export_csv():
     modified_df.to_csv(export_path)
     print("csv was successfuly exported to " + export_path)
 
-def process_csv():
-    import_csv()
-    compare_df()
-    prune_df_columns()
-    export_csv()
+def csv_menu():
+    print("0. Exit.")
+    print("1. Import a CSV")
+    print("2. Compare a the imported CSV with a reference CSV")
+    print("3. Prune columns of the imported CSV.")
+    print("4. Export the imported CSV.")
+    menu_choice = input("choose a menu.... ")
+
+    match menu_choice:
+        case '0':
+            return
+        case '1':
+            import_csv()
+        case '2':
+            compare_df()
+        case '3':
+            prune_df_columns()
+        case '4':
+            export_csv()
+
+    print(" ")
+    csv_menu() 
+
 
 #This is used as a launchingpad to reach other parts of the program
-def main_function() :
-    process_csv()
+def menu_function() :
+    csv_menu()
 
-main_function()
+menu_function()
