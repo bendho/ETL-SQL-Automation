@@ -5,10 +5,9 @@ import PySimpleGUI as sg
 import os 
 
 #Imported dataframe from the user.
-imported_df = pd.read_csv("reference_tables/dummy.csv", encoding="latin-1", on_bad_lines='skip')
-
+imported_df = False
 #Imported DataFrame post modifications.
-modified_df = pd.read_csv("reference_tables/dummy.csv", encoding="latin-1", on_bad_lines='skip')
+modified_df = False
 
 #Reference tables. I need to look into adding more of these later on.
 
@@ -66,25 +65,8 @@ def isolate_data(checked_rows, type_of_data) :
     parsed_data = checked_rows[checked_rows.columns.intersection(type_of_data)]
     return parsed_data
 
-
-def export_file():
-    global modified_df
-    
-    export_path_input = input("Enter a file name to use, files will be exported into the exports folder. ")
-
-    if(not export_path_input):
-        print("You did not input a valid path.")
-        return False
-
-    cwd = os.getcwd()
-
-    export_path = cwd + "/exports/" + export_path_input + ".csv"
-
-    modified_df.to_csv(export_path)
-    print("csv was successfuly exported to " + export_path)
-
 # Handles the conversion of actual CSV files.
-def file_input():
+def compare_df():
     global imported_df
     global modified_df
 
@@ -105,21 +87,16 @@ def file_input():
 
     print(modified_df)
 
-    choice = input("Would you like to further prune your selection? y/n ")
+def prune_df_columns():
+    global modified_df
 
-    if choice == "y":
-        column_list = modified_df.columns.values.tolist()
-        print(column_list)
-        prune_choices = input("Enter the columns that you would like to seperate. use a blank space to seperate your inputs. ")
-        prune_choices = prune_choices.split(" ")
-        modified_df = isolate_data(modified_df, prune_choices)
-        print(modified_df)
+    column_list = modified_df.columns.values.tolist()
+    print(column_list)
+    prune_choices = input("Enter the columns that you would like to seperate. use a blank space to seperate your inputs. ")
+    prune_choices = prune_choices.split(" ")
+    modified_df = isolate_data(modified_df, prune_choices)
+    print(modified_df)
     
-    choice = input("export file? This may overwrite any existing files in the export folder with the same name. y/n ")
-
-    if choice =="y":
-        export_file()
-
 def import_csv():
     inputed_file = input("Input the path for the file that you want to use... ")
 
@@ -128,11 +105,39 @@ def import_csv():
         return False
 
     global imported_df
+    global modified_df
+
     imported_df = pd.read_csv(inputed_file, encoding="latin-1", on_bad_lines='skip')
+    modified_df = imported_df #So people could export a unmodified csv. I am not sure why someone would do this, but you do you.
+
+def export_csv():
+    global modified_df
+    
+    if modified_df is False:
+        print("There is not a database to export. Please import a file.")
+        return FALSE
+
+    export_path_input = input("Enter a file name to use, files will be exported into the exports folder. ")
+
+    if(not export_path_input):
+        print("You did not input a valid path.")
+        return False
+
+    cwd = os.getcwd()
+
+    export_path = cwd + "/exports/" + export_path_input + ".csv"
+
+    modified_df.to_csv(export_path)
+    print("csv was successfuly exported to " + export_path)
+
+def process_csv():
+    import_csv()
+    compare_df()
+    prune_df_columns()
+    export_csv()
 
 #This is used as a launchingpad to reach other parts of the program
 def main_function() :
-    import_csv()
-    file_input()
+    process_csv()
 
 main_function()
