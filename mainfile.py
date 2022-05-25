@@ -1,4 +1,5 @@
 from __future__ import print_function
+from genericpath import exists
 from pickle import FALSE
 import pandas as pd
 import PySimpleGUI as sg
@@ -39,26 +40,33 @@ def find_area_rows (area_to_find, geotype_of_area):
 
 #This is a questionable way of coding this, but it works. I should take a look at this later if I can think of something. 
 
-#Add safety checks
+    if not(compare_choice in fips_df.columns):
+        print("You did not chose a column that exists.")
+        return False
+
     if (geotype_of_area == False or not geotype_of_area):
         rows_of_intrest = fips_df[fips_df[compare_choice].str.casefold().isin([x.casefold() for x in area_to_find])]
     else :
         rows_of_intrest = fips_df[fips_df[compare_choice].str.casefold().isin([x.casefold() for x in area_to_find]) & (fips_df["geotype"].str.casefold() == geotype_of_area)]
-    
-    rows_of_intrest = rows_of_intrest.reset_index(drop=True)
-    # rows_of_intrest.reindex(index=range(len(rows_of_intrest)))
-    
+
+    return rows_of_intrest
+
+#This doesn't work just yet.
+def sort_columns():
+    global modified_df
+
     do_sort = input("Do you want to sort the data? y/n ")
 
     if do_sort == "y":
-        column_list = rows_of_intrest.columns.values.tolist()
+
+        modified_df = modified_df.reset_index(drop=True)
+
+        column_list = modified_df.columns.values.tolist()
         print(column_list)
         
         sort_choice = input("Enter the column that you would like to sort by...")
         
-        rows_of_intrest.sort_values(by=[sort_choice], ascending=False)
-
-    return rows_of_intrest
+        modified_df.sort_values(by=[sort_choice], ascending=False)
 
 def isolate_data(checked_rows, type_of_data) :
 
@@ -82,7 +90,6 @@ def compare_df():
     print(modified_df)
 
     geo_input = input("Enter a geotype, if none is entered everything will show.... ")
-
     modified_df = find_area_rows(modified_df, geo_input)
 
     print(modified_df)
@@ -94,6 +101,10 @@ def prune_df_columns():
     print(column_list)
     prune_choices = input("Enter the columns that you would like to seperate. use a blank space to seperate your inputs. ")
     prune_choices = prune_choices.split(" ")
+
+    if not all(item in column_list for item in prune_choices):
+        return False
+        
     modified_df = isolate_data(modified_df, prune_choices)
     print(modified_df)
     
