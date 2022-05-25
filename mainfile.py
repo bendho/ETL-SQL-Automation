@@ -1,6 +1,5 @@
 from __future__ import print_function
 from genericpath import exists
-from pickle import FALSE
 import pandas as pd
 import PySimpleGUI as sg
 import os 
@@ -23,7 +22,7 @@ def find_area_rows (area_to_find, geotype_of_area):
     print(var_type)
 
     if not(isinstance(area_to_find, pd.core.series.Series)):
-        return FALSE
+        return False
 
     if isinstance(area_to_find, str):
         area_to_find = area_to_find.casefold()
@@ -126,7 +125,7 @@ def export_csv():
     
     if modified_df is False:
         print("There is not a database to export. Please import a file.")
-        return FALSE
+        return False
 
     export_path_input = input("Enter a file name to use, files will be exported into the exports folder. ")
 
