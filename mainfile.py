@@ -116,6 +116,7 @@ def compare_df():
     modified_df = find_area_rows(modified_df, geo_input)
 
     print(modified_df)
+
 #Used to get rid of df columns
 def prune_df_columns():
     global modified_df
@@ -133,6 +134,7 @@ def prune_df_columns():
         
     modified_df = isolate_data(modified_df, prune_choices)
     print(modified_df)
+
 #Imports a CSV
 def import_csv():
     inputed_file = input("Input the path for the file that you want to use... ")
@@ -146,6 +148,7 @@ def import_csv():
 
     imported_df = pd.read_csv(inputed_file, encoding="latin-1", on_bad_lines='skip')
     modified_df = imported_df #So people could export a unmodified csv. I am not sure why someone would do this, but you do you.
+    
 #Exports a CSV
 def export_csv():
     global modified_df
@@ -195,9 +198,6 @@ def csv_menu():
 
     print(" ")
     csv_menu() 
-
-#API query to CSV.
-
 
 #This is used as a launchingpad to reach other parts of the program
 def menu_function() :
