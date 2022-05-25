@@ -54,18 +54,16 @@ def find_area_rows (area_to_find, geotype_of_area):
 def sort_columns():
     global modified_df
 
-    do_sort = input("Do you want to sort the data? y/n ")
+    modified_df = modified_df.reset_index(drop=True)
+    print(modified_df)
 
-    if do_sort == "y":
-
-        modified_df = modified_df.reset_index(drop=True)
-
-        column_list = modified_df.columns.values.tolist()
-        print(column_list)
+    column_list = modified_df.columns.values.tolist()
+    print(" ")
+    print(column_list)
+    
+    sort_choice = input("Enter the column that you would like to sort by...")
         
-        sort_choice = input("Enter the column that you would like to sort by...")
-        
-        modified_df.sort_values(by=[sort_choice], ascending=False)
+    modified_df.sort_values(by=[sort_choice], ascending=False)
 
 def isolate_data(checked_rows, type_of_data) :
 
@@ -151,7 +149,8 @@ def csv_menu():
     print("1. Import a CSV")
     print("2. Compare a the imported CSV with a reference CSV")
     print("3. Prune columns of the imported CSV.")
-    print("4. Export the imported CSV.")
+    print("4. Sort columns of the imported CSV.")
+    print("5. Export the imported CSV.")
     menu_choice = input("choose a menu.... ")
 
     match menu_choice:
@@ -164,6 +163,8 @@ def csv_menu():
         case '3':
             prune_df_columns()
         case '4':
+            sort_columns()
+        case '5':
             export_csv()
 
     print(" ")
