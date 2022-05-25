@@ -5,14 +5,17 @@ import pandas as pd
 import PySimpleGUI as sg
 import os 
 
+#Reference tables. I need to look into adding more of these later on.
+fips_df = pd.read_csv("reference_tables/fipscodes.csv", encoding="latin-1", on_bad_lines='skip')
+
+#What dataframe is being used as a refernece? defaults to fipscodes
+reference_df = fips_df
+
 #Imported dataframe from the user.
 imported_df = False
+
 #Imported DataFrame post modifications.
 modified_df = False
-
-#Reference tables. I need to look into adding more of these later on.
-
-fips_df = pd.read_csv("reference_tables/fipscodes.csv", encoding="latin-1", on_bad_lines='skip')
 
 #Used to find rows within the fips_df that match the parameters. Returns the rows of intrest.
 def find_area_rows (area_to_find, geotype_of_area):
@@ -37,12 +40,11 @@ def find_area_rows (area_to_find, geotype_of_area):
 
     compare_choice = input("What column do you want to compare with the source CSV? ")
 
-
-#This is a questionable way of coding this, but it works. I should take a look at this later if I can think of something. 
-
     if not(compare_choice in fips_df.columns):
         print("You did not chose a column that exists.")
         return False
+
+#This is a questionable way of coding this, but it works. I should take a look at this later if I can think of something. 
 
     if (geotype_of_area == False or not geotype_of_area):
         rows_of_intrest = fips_df[fips_df[compare_choice].str.casefold().isin([x.casefold() for x in area_to_find])]
@@ -135,6 +137,27 @@ def prune_df_columns():
     modified_df = isolate_data(modified_df, prune_choices)
     print(modified_df)
 
+def prune_df_rows():
+    global modified_df
+    if modified_df is False:
+        print("There is not a database to export. Please import a file.")
+        return False
+
+    column_list = modified_df.columns.values.tolist()
+    print(column_list)
+    prune_column = input("Enter the column that you would like to use to prune data form. ")
+
+    prune_choices = input("Enter the data that you want to prune from the selected column. Use spaces to seperate. ")
+    prune_choices = prune_choices.split(" ")
+    
+    prune_df = pd.DataFrame(prune_choices, columns=["temp"])
+
+    modified_df = modified_df.merge(prune_df, left_on=prune_column, right_on=["temp"])
+
+    modified_df = modified_df.drop(columns=["temp"])
+
+    print(modified_df)
+
 #Imports a CSV
 def import_csv():
     inputed_file = input("Input the path for the file that you want to use... ")
@@ -148,7 +171,7 @@ def import_csv():
 
     imported_df = pd.read_csv(inputed_file, encoding="latin-1", on_bad_lines='skip')
     modified_df = imported_df #So people could export a unmodified csv. I am not sure why someone would do this, but you do you.
-    
+
 #Exports a CSV
 def export_csv():
     global modified_df
@@ -175,9 +198,10 @@ def csv_menu():
     print("1. Import a CSV")
     print("2. Compare a the currently loaded dataframe with a reference CSV")
     print("3. Prune columns of the currently loaded dataframe.")
-    print("4. Sort columns of the currently loaded dataframe.")
-    print("5. Merge the currently loaded dataframe with the imported CSV.")
-    print("6. Export the currently loaded dataframe CSV.")
+    print("4. Prune rows of the currently loaded dataframe.")
+    print("5. Sort columns of the currently loaded dataframe.")
+    print("6. Merge the currently loaded dataframe with the imported CSV.")
+    print("7. Export the currently loaded dataframe CSV.")
     menu_choice = input("choose a menu.... ")
 
     match menu_choice:
@@ -190,10 +214,12 @@ def csv_menu():
         case '3':
             prune_df_columns()
         case '4':
-            sort_columns()
+            prune_df_rows()
         case '5':
-            merge_with_import()
+            sort_columns()
         case '6':
+            merge_with_import()
+        case '7':
             export_csv()
 
     print(" ")
