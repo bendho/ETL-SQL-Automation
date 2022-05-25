@@ -1,5 +1,6 @@
 from __future__ import print_function
 from genericpath import exists
+from pickle import TRUE
 import pandas as pd
 import PySimpleGUI as sg
 import os 
@@ -63,7 +64,9 @@ def sort_columns():
     
     sort_choice = input("Enter the column that you would like to sort by...")
         
-    modified_df.sort_values(by=[sort_choice], ascending=False)
+    modified_df = modified_df.sort_values(by=[sort_choice], ascending=True)
+
+    print(modified_df)
 
 #Joins the currnet modified_df to the original df and sets the modified_df as the result
 def merge_with_import():
