@@ -65,12 +65,32 @@ def sort_columns():
         
     modified_df.sort_values(by=[sort_choice], ascending=False)
 
+#Joins the currnet modified_df to the original df and sets the modified_df as the result
+def merge_with_import():
+    global imported_df
+    global modified_df
+
+    column_list = imported_df.columns.values.tolist()
+    print(column_list)
+    print("")
+    selected_import_column = input("Select a column from the original import column to try and merge...")
+
+    column_list = modified_df.columns.values.tolist()
+    print(column_list)
+    print("")
+    selected_current_column = input("Select a column from the currently modified column to try and merge...")
+
+    modified_df = imported_df.merge(modified_df, left_on=selected_import_column, right_on=selected_current_column)
+
+    modified_df = modified_df.drop(columns=[selected_current_column])
+    print(modified_df)
+
 def isolate_data(checked_rows, type_of_data) :
 
     parsed_data = checked_rows[checked_rows.columns.intersection(type_of_data)]
     return parsed_data
 
-# Handles the conversion of actual CSV files.
+#Used to compare a df with a reference, reindexes the df to fit the reference.
 def compare_df():
     global modified_df
 
@@ -93,7 +113,7 @@ def compare_df():
     modified_df = find_area_rows(modified_df, geo_input)
 
     print(modified_df)
-
+#Used to get rid of df columns
 def prune_df_columns():
     global modified_df
     if modified_df is False:
@@ -110,7 +130,7 @@ def prune_df_columns():
         
     modified_df = isolate_data(modified_df, prune_choices)
     print(modified_df)
-    
+#Imports a CSV
 def import_csv():
     inputed_file = input("Input the path for the file that you want to use... ")
 
@@ -123,7 +143,7 @@ def import_csv():
 
     imported_df = pd.read_csv(inputed_file, encoding="latin-1", on_bad_lines='skip')
     modified_df = imported_df #So people could export a unmodified csv. I am not sure why someone would do this, but you do you.
-
+#Exports a CSV
 def export_csv():
     global modified_df
     
@@ -147,10 +167,11 @@ def export_csv():
 def csv_menu():
     print("0. Exit.")
     print("1. Import a CSV")
-    print("2. Compare a the imported CSV with a reference CSV")
-    print("3. Prune columns of the imported CSV.")
-    print("4. Sort columns of the imported CSV.")
-    print("5. Export the imported CSV.")
+    print("2. Compare a the currently loaded dataframe with a reference CSV")
+    print("3. Prune columns of the currently loaded dataframe.")
+    print("4. Sort columns of the currently loaded dataframe.")
+    print("5. Merge the currently loaded dataframe with the imported CSV.")
+    print("6. Export the currently loaded dataframe CSV.")
     menu_choice = input("choose a menu.... ")
 
     match menu_choice:
@@ -165,6 +186,8 @@ def csv_menu():
         case '4':
             sort_columns()
         case '5':
+            merge_with_import()
+        case '6':
             export_csv()
 
     print(" ")
