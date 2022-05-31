@@ -1,6 +1,7 @@
 from __future__ import print_function
 from genericpath import exists
 from pickle import TRUE
+from zoneinfo import available_timezones
 import pandas as pd
 import PySimpleGUI as sg
 import os 
@@ -17,8 +18,15 @@ imported_df = False
 #Imported DataFrame post modifications.
 modified_df = False
 
+#Selects a reference table to use. Reference tables are stored within the refrence_tables folder
+
+def select_reference():
+    for file in os.listdir("reference_tables"):
+        if file.endswith(".csv"):
+            print(file) 
+
 #Used to find rows within the fips_df that match the parameters. Returns the rows of intrest.
-def find_area_rows (area_to_find, geotype_of_area):
+def find_area_rows (area_to_find):
     if area_to_find.empty :
         return False
 
@@ -30,7 +38,6 @@ def find_area_rows (area_to_find, geotype_of_area):
 
     if isinstance(area_to_find, str):
         area_to_find = area_to_find.casefold()
-        geotype_of_area = geotype_of_area.casefold()
 
     active_table = fips_df
 
@@ -44,12 +51,7 @@ def find_area_rows (area_to_find, geotype_of_area):
         print("You did not chose a column that exists.")
         return False
 
-#This is a questionable way of coding this, but it works. I should take a look at this later if I can think of something. 
-
-    if (geotype_of_area == False or not geotype_of_area):
-        rows_of_intrest = fips_df[fips_df[compare_choice].str.casefold().isin([x.casefold() for x in area_to_find])]
-    else :
-        rows_of_intrest = fips_df[fips_df[compare_choice].str.casefold().isin([x.casefold() for x in area_to_find]) & (fips_df["geotype"].str.casefold() == geotype_of_area)]
+    rows_of_intrest = fips_df[fips_df[compare_choice].str.casefold().isin([x.casefold() for x in area_to_find])]
 
     return rows_of_intrest
 
@@ -114,8 +116,7 @@ def compare_df():
     
     print(modified_df)
 
-    geo_input = input("Enter a geotype, if none is entered everything will show.... ")
-    modified_df = find_area_rows(modified_df, geo_input)
+    modified_df = find_area_rows(modified_df)
 
     print(modified_df)
 
@@ -202,6 +203,7 @@ def csv_menu():
     print("5. Sort columns of the currently loaded dataframe.")
     print("6. Merge the currently loaded dataframe with the imported CSV.")
     print("7. Export the currently loaded dataframe CSV.")
+    print("8. Chose a table to use as a reference")
     menu_choice = input("choose a menu.... ")
 
     match menu_choice:
@@ -221,6 +223,8 @@ def csv_menu():
             merge_with_import()
         case '7':
             export_csv()
+        case '8':
+            select_reference()
 
     print(" ")
     csv_menu() 
