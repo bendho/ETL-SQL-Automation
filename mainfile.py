@@ -1,6 +1,7 @@
 from __future__ import print_function
 from genericpath import exists
 from pickle import TRUE
+from secrets import choice
 from zoneinfo import available_timezones
 import pandas as pd
 import PySimpleGUI as sg
@@ -21,9 +22,25 @@ modified_df = False
 #Selects a reference table to use. Reference tables are stored within the refrence_tables folder
 
 def select_reference():
+    global reference_df
+
+    print("The following files are avalible for use... ")
     for file in os.listdir("reference_tables"):
         if file.endswith(".csv"):
             print(file) 
+
+    selected_file = input("Select a file to use...  ")
+
+    cwd = os.getcwd()
+    import_path = cwd + "/reference_tables/" + selected_file + ".csv"
+
+    if  not exists(import_path):
+        print("The file you are looking for does not exist within the directory.")
+        return False
+     
+    reference_df = pd.read_csv(import_path, encoding="latin-1", on_bad_lines='skip')
+
+    print(selected_file + " is now the selected file")
 
 #Used to find rows within the fips_df that match the parameters. Returns the rows of intrest.
 def find_area_rows (area_to_find):
