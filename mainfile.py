@@ -1,8 +1,6 @@
 from __future__ import print_function
 from genericpath import exists
 from pickle import TRUE
-from secrets import choice
-from zoneinfo import available_timezones
 import pandas as pd
 import PySimpleGUI as sg
 import os 
