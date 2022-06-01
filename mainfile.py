@@ -153,6 +153,31 @@ def prune_df_columns():
     modified_df = isolate_data(modified_df, prune_choices)
     print(modified_df)
 
+def swap_columns():
+    global modified_df
+    columns = list(modified_df.columns)
+
+    print(columns)
+
+    column_a = input("Input Column A to swap... ")
+    
+    if column_a not in modified_df.columns:
+        print("You have entered a column that does not exist.")
+        return False
+        
+    column_b = input("Input Column B to swap... ")
+
+    if column_b not in modified_df.columns:
+        print("You have entered a column that does not exist.")
+        return False 
+ 
+    #This feels like spaghetti
+    column_a, column_b = columns.index(column_a), columns.index(column_b)
+    columns[column_a], columns[column_b] = columns[column_b], columns[column_a]
+    modified_df = modified_df[columns]
+
+    print(modified_df)
+
 def prune_df_rows():
     global modified_df
     if modified_df is False:
@@ -219,6 +244,7 @@ def csv_menu():
     print("6. Merge the currently loaded dataframe with the imported CSV.")
     print("7. Export the currently loaded dataframe CSV.")
     print("8. Chose a table to use as a reference")
+    print("9. Sort Columns")
     menu_choice = input("choose a menu.... ")
 
     match menu_choice:
@@ -240,6 +266,8 @@ def csv_menu():
             export_csv()
         case '8':
             select_reference()
+        case '9':
+            swap_columns()
 
     print(" ")
     csv_menu() 
