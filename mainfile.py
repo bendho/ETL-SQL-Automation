@@ -138,6 +138,7 @@ def compare_df():
 #Used to get rid of df columns
 def prune_df_columns():
     global modified_df
+
     if modified_df is False:
         print("There is not a database to export. Please import a file.")
         return False
@@ -153,6 +154,7 @@ def prune_df_columns():
     modified_df = isolate_data(modified_df, prune_choices)
     print(modified_df)
 
+#swaps columns based off user input.
 def swap_columns():
     global modified_df
     columns = list(modified_df.columns)
@@ -178,8 +180,40 @@ def swap_columns():
 
     print(modified_df)
 
+def unpivot():
+    global modified_df
+
+    if modified_df is False:
+        print("There is not a database to export. Please import a file.")
+        return False
+
+    column_list = modified_df.columns.values.tolist()
+    print(column_list)
+
+    user_input_columns = input("Please enter the coulumns that you want to unpivot in a space seperated list... ")
+    user_input_columns = user_input_columns.split(" ")
+
+    for column_item in user_input_columns:
+        if column_item not in column_list:
+            print("The Column you inputed does not exist.")
+            return False
+    
+    safe_columns = [x for x in column_list if x not in user_input_columns]
+
+    user_var_name = input("Input a name for the variable column. If nothing is inserted, a default name will be used.")
+    if user_var_name == "" :
+        user_var_name = "code"
+
+    user_value_name = input("Input a name for the value column. If nothing is inserted, a default name will be used.")
+    if user_value_name == "" :
+       user_value_name = "data"
+
+    modified_df = pd.melt(modified_df, id_vars = safe_columns, value_vars = user_input_columns, value_name = user_value_name, var_name = user_var_name)
+    print(modified_df)        
+
 def prune_df_rows():
     global modified_df
+
     if modified_df is False:
         print("There is not a database to export. Please import a file.")
         return False
@@ -245,6 +279,7 @@ def csv_menu():
     print("7. Export the currently loaded dataframe CSV.")
     print("8. Chose a table to use as a reference")
     print("9. Sort Columns")
+    print("10. Unpivot Columns")
     menu_choice = input("choose a menu.... ")
 
     match menu_choice:
@@ -268,6 +303,8 @@ def csv_menu():
             select_reference()
         case '9':
             swap_columns()
+        case '10':
+            unpivot()
 
     print(" ")
     csv_menu() 
