@@ -3,9 +3,27 @@ from genericpath import exists
 from pickle import TRUE
 import pandas as pd
 import PySimpleGUI as sg
-import os 
+import os
 
-from mainfile import *
+import mainfile as mf 
+
+def import_file():
+    print("The following files are avalible for use... ")
+    
+    for file in os.listdir("reference_tables"):
+        if file.endswith(".csv"):
+            print(file) 
+
+    selected_file = input("Select a file to use...  ")
+
+    cwd = os.getcwd()
+    import_path = cwd + "/reference_tables/" + selected_file + ".csv"
+
+    if  not exists(import_path):
+        print("The file you are looking for does not exist within the directory.")
+        return False
+
+    mf.import_csv(import_path)
 
 def csv_menu():
     print("0. Exit.")
@@ -26,7 +44,7 @@ def csv_menu():
         case '0':
             return
         case '1':
-            import_csv()
+            import_file()
         case '2':
             compare_df()
         case '3':

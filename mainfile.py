@@ -5,6 +5,9 @@ import pandas as pd
 import PySimpleGUI as sg
 import os 
 
+#Is User Input being used?
+user_input = False
+
 #Reference tables. I need to look into adding more of these later on.
 fips_df = pd.read_csv("reference_tables/fipscodes.csv", encoding="latin-1", on_bad_lines='skip')
 
@@ -19,26 +22,16 @@ modified_df = False
 
 #Selects a reference table to use. Reference tables are stored within the refrence_tables folder
 
-def select_reference():
+def select_reference(input_path):
     global reference_df
 
-    print("The following files are avalible for use... ")
-    for file in os.listdir("reference_tables"):
-        if file.endswith(".csv"):
-            print(file) 
-
-    selected_file = input("Select a file to use...  ")
-
-    cwd = os.getcwd()
-    import_path = cwd + "/reference_tables/" + selected_file + ".csv"
-
-    if  not exists(import_path):
-        print("The file you are looking for does not exist within the directory.")
+    if  not exists(input_path):
+        print("The file does not exist.")
         return False
      
-    reference_df = pd.read_csv(import_path, encoding="latin-1", on_bad_lines='skip')
+    reference_df = pd.read_csv(input_path, encoding="latin-1", on_bad_lines='skip')
 
-    print(selected_file + " is now the selected file")
+    print(input_path + " is now the selected file")
 
 #Used to find rows within the fips_df that match the parameters. Returns the rows of intrest.
 def find_area_rows (area_to_find):
