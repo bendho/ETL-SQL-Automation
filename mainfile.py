@@ -30,38 +30,26 @@ def select_reference(input_path):
 
     print(input_path + " is now the current reference file")
 
-def import_csv():
-    inputed_file = input("Input the path for the file that you want to use... ")
-
-    if not ".csv" in inputed_file:
-        print("the file you picked was not a csv. please use a csv.")
-        return False
+def import_csv(inputed_file):
 
     global imported_df
     global modified_df
 
     imported_df = pd.read_csv(inputed_file, encoding="latin-1", on_bad_lines='skip')
-    modified_df = imported_df #So people could export a unmodified csv. I am not sure why someone would do this, but you do you.
+    modified_df = imported_df 
+
+    print("The DataFrame has been imported")
 
 #Exports a CSV
-def export_csv():
+def export_csv(export_path):
     global modified_df
-    
+
     if modified_df is False:
-        print("There is not a database to export. Please import a file.")
-        return False
-
-    export_path_input = input("Enter a file name to use, files will be exported into the exports folder. ")
-
-    if(not export_path_input):
-        print("You did not input a valid path.")
-        return False
-
-    cwd = os.getcwd()
-
-    export_path = cwd + "/exports/" + export_path_input + ".csv"
+        print("There is no database to export. Please import a file.")
+        return False   
 
     modified_df.to_csv(export_path)
+
     print("csv was successfuly exported to " + export_path)
 
 

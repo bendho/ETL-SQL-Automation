@@ -7,6 +7,8 @@ import os
 
 import mainfile as mf 
 
+modified_df = False
+
 def select_ref():
     print("The following files are avalible for use... ")
     
@@ -25,9 +27,34 @@ def select_ref():
 
     mf.select_reference(import_path)
 
+def import_csv():
+    inputed_file = input("Input the path for the file that you want to use... ")
+
+    if not ".csv" in inputed_file:
+        print("the file you picked was not a csv. please use a csv.")
+        return False
+
+    mf.import_csv(inputed_file)
+
+def export_csv():
+    export_path_input = input("Enter a file name to use, files will be exported into the exports folder. ")
+
+    if(not export_path_input):
+        print("You did not input a valid path.")
+        return False
+
+    cwd = os.getcwd()
+
+    export_path = cwd + "/exports/" + export_path_input + ".csv"
+
+    mf.export_csv(export_path)
+   
+
 def csv_menu():
     print("0. Exit.")
     print("1. Chose a dataframe to use as a reference")
+    print("2. Import a CSV file to transform")
+    print("3. Export a DataFrame to a CSV")
 
     menu_choice = input("choose a menu.... ")
 
@@ -36,6 +63,10 @@ def csv_menu():
             return
         case '1':
             select_ref()
+        case '2':
+            import_csv()
+        case '3':
+            export_csv()
 
     print(" ")
     csv_menu() 
