@@ -5,9 +5,6 @@ import pandas as pd
 import PySimpleGUI as sg
 import os 
 
-#Is User Input being used?
-user_input = False
-
 #Reference tables. I need to look into adding more of these later on.
 fips_df = pd.read_csv("reference_tables/fipscodes.csv", encoding="latin-1", on_bad_lines='skip')
 
@@ -31,7 +28,42 @@ def select_reference(input_path):
      
     reference_df = pd.read_csv(input_path, encoding="latin-1", on_bad_lines='skip')
 
-    print(input_path + " is now the selected file")
+    print(input_path + " is now the current reference file")
+
+def import_csv():
+    inputed_file = input("Input the path for the file that you want to use... ")
+
+    if not ".csv" in inputed_file:
+        print("the file you picked was not a csv. please use a csv.")
+        return False
+
+    global imported_df
+    global modified_df
+
+    imported_df = pd.read_csv(inputed_file, encoding="latin-1", on_bad_lines='skip')
+    modified_df = imported_df #So people could export a unmodified csv. I am not sure why someone would do this, but you do you.
+
+#Exports a CSV
+def export_csv():
+    global modified_df
+    
+    if modified_df is False:
+        print("There is not a database to export. Please import a file.")
+        return False
+
+    export_path_input = input("Enter a file name to use, files will be exported into the exports folder. ")
+
+    if(not export_path_input):
+        print("You did not input a valid path.")
+        return False
+
+    cwd = os.getcwd()
+
+    export_path = cwd + "/exports/" + export_path_input + ".csv"
+
+    modified_df.to_csv(export_path)
+    print("csv was successfuly exported to " + export_path)
+
 
 #Used to find rows within the fips_df that match the parameters. Returns the rows of intrest.
 def find_area_rows (area_to_find):
@@ -256,37 +288,3 @@ def prune_df_rows():
     print(modified_df)
 
 #Imports a CSV
-def import_csv():
-    inputed_file = input("Input the path for the file that you want to use... ")
-
-    if not ".csv" in inputed_file:
-        print("the file you picked was not a csv. please use a csv.")
-        return False
-
-    global imported_df
-    global modified_df
-
-    imported_df = pd.read_csv(inputed_file, encoding="latin-1", on_bad_lines='skip')
-    modified_df = imported_df #So people could export a unmodified csv. I am not sure why someone would do this, but you do you.
-
-#Exports a CSV
-def export_csv():
-    global modified_df
-    
-    if modified_df is False:
-        print("There is not a database to export. Please import a file.")
-        return False
-
-    export_path_input = input("Enter a file name to use, files will be exported into the exports folder. ")
-
-    if(not export_path_input):
-        print("You did not input a valid path.")
-        return False
-
-    cwd = os.getcwd()
-
-    export_path = cwd + "/exports/" + export_path_input + ".csv"
-
-    modified_df.to_csv(export_path)
-    print("csv was successfuly exported to " + export_path)
-
