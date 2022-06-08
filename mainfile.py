@@ -1,7 +1,6 @@
 from __future__ import print_function
 from genericpath import exists
-from pickle import TRUE
-from pydoc import describe
+import numpy as np
 import pandas as pd
 import PySimpleGUI as sg
 import os 
@@ -270,4 +269,8 @@ def prune_df_rows():
 
     print(modified_df.head(5))
 
-#Imports a CSV
+def add_empty_column(column_name):
+    global modified_df
+
+    #leaves the value as NaN, this will get cleaned up during the export process.
+    modified_df[column_name] = np.nan 
