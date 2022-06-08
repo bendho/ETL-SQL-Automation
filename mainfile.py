@@ -1,6 +1,7 @@
 from __future__ import print_function
 from genericpath import exists
 from pickle import TRUE
+from pydoc import describe
 import pandas as pd
 import PySimpleGUI as sg
 import os 
@@ -78,7 +79,7 @@ def sort_columns():
         
     modified_df = modified_df.sort_values(by=[sort_choice], ascending=True)
 
-    print(modified_df)
+    print(modified_df.head(5))
 
 #Joins the currnet modified_df to the original df and sets the modified_df as the result
 def merge_with_import():
@@ -98,7 +99,7 @@ def merge_with_import():
     modified_df = imported_df.merge(modified_df, left_on=selected_import_column, right_on=selected_current_column)
 
     modified_df = modified_df.drop(columns=[selected_current_column])
-    print(modified_df)
+    print(modified_df.head(5))
 
 def isolate_data(checked_rows, type_of_data) :
 
@@ -135,7 +136,7 @@ def match_df(column_to_match, ref_column):
 
     modified_df = rows_of_intrest
 
-    print(modified_df)
+    print(modified_df.head(5))
 
 #Used to get rid of df columns
 def prune_df_columns():
@@ -154,7 +155,7 @@ def prune_df_columns():
         return False
         
     modified_df = isolate_data(modified_df, prune_choices)
-    print(modified_df)
+    print(modified_df.head(5))
 
 #swaps columns based off user input.
 def swap_columns():
@@ -180,7 +181,7 @@ def swap_columns():
     columns[column_a], columns[column_b] = columns[column_b], columns[column_a]
     modified_df = modified_df[columns]
 
-    print(modified_df)
+    print(modified_df.head(5))
 
 def unpivot():
     global modified_df
@@ -211,7 +212,7 @@ def unpivot():
        user_value_name = "data"
 
     modified_df = pd.melt(modified_df, id_vars = safe_columns, value_vars = user_input_columns, value_name = user_value_name, var_name = user_var_name)
-    print(modified_df)        
+    print(modified_df.head(5))        
 
 def pivot():
     global modified_df
@@ -239,7 +240,8 @@ def pivot():
     safe_columns = [x for x in safe_columns if x not in user_input_value]
 
     modified_df = modified_df.pivot_table(index=safe_columns, values = user_input_value, columns= user_input_column)            
-    print(modified_df)
+
+    print(modified_df.head(5))
 
 
 def prune_df_rows():
@@ -262,6 +264,6 @@ def prune_df_rows():
 
     modified_df = modified_df.drop(columns=["temp"])
 
-    print(modified_df)
+    print(modified_df.head(5))
 
 #Imports a CSV
