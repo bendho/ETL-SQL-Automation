@@ -52,8 +52,12 @@ def import_csv(inputed_file):
     print("The DataFrame has been imported")
 
 #Exports a CSV
-def export_csv(export_path):
+def export_csv(export_path, fill_null = True):
     global modified_df
+    
+    #Autofills nulls
+    if fill_null == True:
+        modified_df.fillna(0)
 
     if modified_df is False:
         print("There is no database to export. Please import a file.")
