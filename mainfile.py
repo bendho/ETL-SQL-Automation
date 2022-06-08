@@ -67,7 +67,6 @@ def export_csv(export_path, fill_null = True):
     print("csv was successfuly exported to " + export_path)
 
 
-#This doesn't work just yet.
 def sort_columns():
     global modified_df
 
@@ -161,19 +160,13 @@ def prune_df_columns():
     print(modified_df.head(5))
 
 #swaps columns based off user input.
-def swap_columns():
+def swap_columns(column_a, column_b):
     global modified_df
     columns = list(modified_df.columns)
-
-    print(columns)
-
-    column_a = input("Input Column A to swap... ")
-    
+   
     if column_a not in modified_df.columns:
         print("You have entered a column that does not exist.")
         return False
-        
-    column_b = input("Input Column B to swap... ")
 
     if column_b not in modified_df.columns:
         print("You have entered a column that does not exist.")

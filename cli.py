@@ -72,6 +72,16 @@ def match_df():
 
     mf.match_df(match_column, reference_column)  
 
+def swap_columns():
+    modified_df = mf.return_modified_df()
+
+    print(list(modified_df.columns))
+
+    column_a = input("Input Column A to swap... ")
+
+    column_b = input("input Column B to swap... ")
+
+    mf.swap_columns(column_a, column_b)
 #Main Menu function
 def csv_menu():
     print("0. Exit.")
@@ -79,6 +89,7 @@ def csv_menu():
     print("2. Import a CSV file to transform")
     print("3. Export a DataFrame to a CSV")
     print("4. Match the imported DataFrame with a reference table")
+    print("5. Swap columns from the current modified DF")
 
     menu_choice = input("choose a menu.... ")
 
@@ -93,6 +104,8 @@ def csv_menu():
             export_csv()
         case '4':
             match_df()
+        case '5':
+            swap_columns()
 
     print(" ")
     csv_menu() 
