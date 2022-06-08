@@ -17,8 +17,17 @@ imported_df = False
 #Imported DataFrame post modifications.
 modified_df = False
 
-#Selects a reference table to use. Reference tables are stored within the refrence_tables folder
+#Return functions, these are mostly used for anything that requires the use of one of the dataframes outside of the main program
+def return_reference_df():
+    return reference_df
 
+def return_modified_df():
+    return modified_df
+
+def return_imported_df():
+    return imported_df
+    
+#Selects a reference table to use. Reference tables are stored within the refrence_tables folder
 def select_reference(input_path):
     global reference_df
 
@@ -30,6 +39,7 @@ def select_reference(input_path):
 
     print(input_path + " is now the current reference file")
 
+#Imports a file
 def import_csv(inputed_file):
 
     global imported_df
@@ -52,36 +62,6 @@ def export_csv(export_path):
 
     print("csv was successfuly exported to " + export_path)
 
-
-#Used to find rows within the fips_df that match the parameters. Returns the rows of intrest.
-def find_area_rows (area_to_find):
-    if area_to_find.empty :
-        return False
-
-    var_type = type(area_to_find)
-    print(var_type)
-
-    if not(isinstance(area_to_find, pd.core.series.Series)):
-        return False
-
-    if isinstance(area_to_find, str):
-        area_to_find = area_to_find.casefold()
-
-    active_table = fips_df
-
-    column_list = active_table.columns.values.tolist()
-
-    print(column_list)
-
-    compare_choice = input("What column do you want to compare with the source CSV? ")
-
-    if not(compare_choice in fips_df.columns):
-        print("You did not chose a column that exists.")
-        return False
-
-    rows_of_intrest = fips_df[fips_df[compare_choice].str.casefold().isin([x.casefold() for x in area_to_find])]
-
-    return rows_of_intrest
 
 #This doesn't work just yet.
 def sort_columns():
@@ -126,25 +106,34 @@ def isolate_data(checked_rows, type_of_data) :
     return parsed_data
 
 #Used to compare a df with a reference, reindexes the df to fit the reference.
-def compare_df():
+def match_df(column_to_match, ref_column):
     global modified_df
+    global reference_df
 
     if modified_df is False:
         print("There is not a database to export. Please import a file.")
         return False
 
-    print(modified_df.columns)
+    if not(column_to_match in modified_df.columns):
+        print("You did not chose a column that exists.")
+        return False
 
-    ref_column = input("Chose a column to use as a reference... ")
-    modified_df = modified_df.loc[: , ref_column]
+    column_to_match = modified_df.loc[: , column_to_match]
 
-    if modified_df.empty :
+    if reference_df[ref_column].empty :
         print("The column you chose lacks data.")
-        return
-    
-    print(modified_df)
+        return False
 
-    modified_df = find_area_rows(modified_df)
+    if not(ref_column in reference_df.columns):
+        print("You did not chose a reference column that exists.")
+        return False
+
+    if isinstance(column_to_match, str):
+        column_to_match = column_to_match.casefold() 
+
+    rows_of_intrest = reference_df[reference_df[ref_column].str.casefold().isin([x.casefold() for x in column_to_match])]
+
+    modified_df = rows_of_intrest
 
     print(modified_df)
 

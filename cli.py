@@ -9,6 +9,7 @@ import mainfile as mf
 
 modified_df = False
 
+#Reference functions
 def select_ref():
     print("The following files are avalible for use... ")
     
@@ -27,6 +28,7 @@ def select_ref():
 
     mf.select_reference(import_path)
 
+#Import and Export functions 
 def import_csv():
     inputed_file = input("Input the path for the file that you want to use... ")
 
@@ -48,13 +50,35 @@ def export_csv():
     export_path = cwd + "/exports/" + export_path_input + ".csv"
 
     mf.export_csv(export_path)
-   
 
+def match_df():
+    modified_df = mf.return_modified_df()
+    print(modified_df.columns)
+
+    match_column = input("Input a column to find a match with.... ")
+
+    if not (match_column in modified_df.columns):
+        print("You did not enter a valid column to match.")
+        return False
+
+    reference_df = mf.return_reference_df()
+    print(reference_df.columns)
+
+    reference_column = input("Input a column to match with from the reference table")
+
+    if not (reference_column in reference_df.columns):
+        print("You did not enter a valid column to match. ")
+        return False
+
+    mf.match_df(match_column, reference_column)  
+
+#Main Menu function
 def csv_menu():
     print("0. Exit.")
     print("1. Chose a dataframe to use as a reference")
     print("2. Import a CSV file to transform")
     print("3. Export a DataFrame to a CSV")
+    print("4. Match the imported DataFrame with a reference table")
 
     menu_choice = input("choose a menu.... ")
 
@@ -67,6 +91,8 @@ def csv_menu():
             import_csv()
         case '3':
             export_csv()
+        case '4':
+            match_df()
 
     print(" ")
     csv_menu() 
