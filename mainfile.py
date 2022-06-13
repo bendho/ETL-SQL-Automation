@@ -205,6 +205,7 @@ def pivot(value_column, pivot_column):
    #This is here so that the DataFrame isn't just isolated to to the pivoted columns 
     safe_columns = [x for x in column_list if x not in pivot_column]
     safe_columns = [x for x in safe_columns if x not in value_column]
+    safe_columns = [x for x in safe_columns if x in modified_df.columns]
 
     modified_df = modified_df.pivot_table(index = safe_columns, values = value_column, columns = pivot_column)            
 
