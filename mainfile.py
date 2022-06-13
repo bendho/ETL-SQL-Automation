@@ -26,12 +26,24 @@ def return_modified_df():
 
 def return_imported_df():
     return imported_df
-    
+
+#Checks to see if modified_df is imported, and not empty 
+def check_modified_df(is_empty_okay = False):
+    global modified_df
+
+    if modified_df is False:
+        print("There is not a DataFrame loaded to use, please import a file!")
+        return False
+
+    if (len(modified_df.columns) == 0 and is_empty_okay == False):
+        print("The modified DataFrame is empty!")
+        return False
+
 #Selects a reference table to use. Reference tables are stored within the refrence_tables folder
 def select_reference(input_path):
     global reference_df
 
-    if  not exists(input_path):
+    if not exists(input_path):
         print("The file does not exist.")
         return False
      
@@ -53,14 +65,13 @@ def import_csv(inputed_file):
 #Exports a CSV
 def export_csv(export_path, fill_null = True):
     global modified_df
-    
+ 
+    if check_modified_df() == False:
+        return   
+ 
     #Autofills nulls
     if fill_null == True:
         modified_df.fillna(0)
-
-    if modified_df is False:
-        print("There is no database to export. Please import a file.")
-        return False   
 
     modified_df.to_csv(export_path)
 
@@ -88,6 +99,9 @@ def merge_with_import():
     global imported_df
     global modified_df
 
+    if check_modified_df() == False:
+        return   
+ 
     column_list = imported_df.columns.values.tolist()
     print(column_list)
     print("")
@@ -113,10 +127,9 @@ def match_df(column_to_match, ref_column):
     global modified_df
     global reference_df
 
-    if modified_df is False:
-        print("There is not a database to export. Please import a file.")
-        return False
-
+    if check_modified_df() == False:
+        return   
+ 
     if not(column_to_match in modified_df.columns):
         print("You did not chose a column that exists.")
         return False
@@ -144,10 +157,9 @@ def match_df(column_to_match, ref_column):
 def prune_df_columns():
     global modified_df
 
-    if modified_df is False:
-        print("There is not a database to export. Please import a file.")
-        return False
-
+    if check_modified_df() == False:
+        return   
+ 
     column_list = modified_df.columns.values.tolist()
     print(column_list)
     prune_choices = input("Enter the columns that you would like to seperate. use a blank space to seperate your inputs. ")
@@ -182,10 +194,9 @@ def swap_columns(column_a, column_b):
 def unpivot(unpivot_columns, variable_column_name, value_column_name):
     global modified_df
 
-    if modified_df is False:
-        print("There is not a database to export. Please import a file.")
-        return False
-
+    if check_modified_df() == False:
+        return   
+ 
     column_list = modified_df.columns.values.tolist()
 
     safe_columns = [x for x in column_list if x not in unpivot_columns]
@@ -196,10 +207,9 @@ def unpivot(unpivot_columns, variable_column_name, value_column_name):
 def pivot(value_column, pivot_column):
     global modified_df
 
-    if modified_df is False:
-        print("There is not a database to export. Please import a file.")
-        return False
-
+    if check_modified_df() == False:
+        return   
+ 
     column_list = modified_df.columns.values.tolist()
    
    #This is here so that the DataFrame isn't just isolated to to the pivoted columns 
@@ -214,10 +224,9 @@ def pivot(value_column, pivot_column):
 def prune_df_rows():
     global modified_df
 
-    if modified_df is False:
-        print("There is not a database to export. Please import a file.")
-        return False
-
+    if check_modified_df() == False:
+        return   
+ 
     column_list = modified_df.columns.values.tolist()
     print(column_list)
     prune_column = input("Enter the column that you would like to use to prune data form. ")
