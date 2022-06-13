@@ -39,6 +39,9 @@ def import_csv():
     mf.import_csv(inputed_file)
 
 def export_csv():
+    if mf.check_modified_df() == False:
+        return   
+
     export_path_input = input("Enter a file name to use, files will be exported into the exports folder. ")
 
     if(not export_path_input):
@@ -52,9 +55,13 @@ def export_csv():
     mf.export_csv(export_path)
 
 def match_df():
+    if mf.check_modified_df() == False:
+        return   
+    
     modified_df = mf.return_modified_df()
-    print(modified_df.columns)
 
+    print(modified_df.columns)
+    
     match_column = input("Input a column to find a match with.... ")
 
     if not (match_column in modified_df.columns):
@@ -73,6 +80,9 @@ def match_df():
     mf.match_df(match_column, reference_column)  
 
 def swap_columns():
+    if mf.check_modified_df() == False:
+        return   
+ 
     modified_df = mf.return_modified_df()
 
     print(list(modified_df.columns))
@@ -84,11 +94,10 @@ def swap_columns():
     mf.swap_columns(column_a, column_b)
 
 def pivot_columns():
+    if mf.check_modified_df() == False:
+        return   
+ 
     modified_df = mf.return_modified_df()
-
-    if modified_df is False:
-        print("There is not a database to export. Please import a file.")
-        return False
 
     column_list = modified_df.columns.values.tolist()
     print(column_list)
@@ -108,6 +117,9 @@ def pivot_columns():
     mf.pivot(user_input_value, user_input_column)
 
 def unpivot():
+    if mf.check_modified_df() == False:
+        return   
+
     modified_df = mf.return_modified_df()
 
     column_list = modified_df.columns.values.tolist()
@@ -131,6 +143,20 @@ def unpivot():
 
     mf.unpivot(user_input_columns, user_var_name, user_value_name)    
 
+def prune_columns():
+    if mf.check_modified_df() == False:
+        return   
+
+    modified_df = mf.return_modified_df()
+    column_list = modified_df.columns.values.tolist()
+    print(column_list)
+
+    prune_choices = input("Enter the columns that you would like to seperate. use a blank space to seperate your inputs. ")
+    prune_choices = prune_choices.split(" ")
+
+    mf.prune_df_columns(prune_choices)
+
+
 #Main Menu function
 def csv_menu():
     print("0. Exit.")
@@ -141,6 +167,7 @@ def csv_menu():
     print("5. Swap columns from the current modified DF")
     print("6. Pivot Columns")
     print("7. Unpivot Columns")
+    print("8. Prune Columns")
 
     menu_choice = input("choose a menu.... ")
 
@@ -161,6 +188,8 @@ def csv_menu():
             pivot_columns()
         case '7':
             unpivot()
+        case '8':
+            prune_columns()
 
     print(" ")
     csv_menu() 

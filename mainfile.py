@@ -1,4 +1,3 @@
-from __future__ import print_function
 from genericpath import exists
 import numpy as np
 import pandas as pd
@@ -153,22 +152,20 @@ def match_df(column_to_match, ref_column):
 
     print(modified_df.head(5))
 
-#Used to get rid of df columns
-def prune_df_columns():
+#Removes all columns besides the inputed ones
+def prune_df_columns(columns_to_prune):
     global modified_df
 
     if check_modified_df() == False:
         return   
  
     column_list = modified_df.columns.values.tolist()
-    print(column_list)
-    prune_choices = input("Enter the columns that you would like to seperate. use a blank space to seperate your inputs. ")
-    prune_choices = prune_choices.split(" ")
 
-    if not all(item in column_list for item in prune_choices):
+    if not all(item in column_list for item in columns_to_prune):
+        print("Not all of the itmes that you decided to prune existed")
         return False
         
-    modified_df = isolate_data(modified_df, prune_choices)
+    modified_df = isolate_data(modified_df, columns_to_prune)
     print(modified_df.head(5))
 
 #swaps columns based off user input.
