@@ -112,8 +112,8 @@ def merge_with_import():
     selected_current_column = input("Select a column from the currently modified column to try and merge...")
 
     modified_df = imported_df.merge(modified_df, left_on=selected_import_column, right_on=selected_current_column)
-
     modified_df = modified_df.drop(columns=[selected_current_column])
+
     print(modified_df.head(5))
 
 def isolate_data(checked_rows, type_of_data) :
@@ -146,9 +146,8 @@ def match_df(column_to_match, ref_column):
     if isinstance(column_to_match, str):
         column_to_match = column_to_match.casefold() 
 
-    rows_of_intrest = reference_df[reference_df[ref_column].str.casefold().isin([x.casefold() for x in column_to_match])]
-
-    modified_df = rows_of_intrest
+    modified_df = modified_df.merge(reference_df, left_on=column_to_match, right_on=ref_column)
+    modified_df.drop(columns=ref_column)
 
     print(modified_df.head(5))
 
