@@ -179,7 +179,7 @@ def swap_columns(column_a, column_b):
 
     print(modified_df.head(5))
 
-def unpivot():
+def unpivot(unpivot_columns, variable_column_name, value_column_name):
     global modified_df
 
     if modified_df is False:
@@ -187,27 +187,10 @@ def unpivot():
         return False
 
     column_list = modified_df.columns.values.tolist()
-    print(column_list)
 
-    user_input_columns = input("Please enter the coulumns that you want to unpivot in a space seperated list... ")
-    user_input_columns = user_input_columns.split(" ")
+    safe_columns = [x for x in column_list if x not in unpivot_columns]
 
-    for column_item in user_input_columns:
-        if column_item not in column_list:
-            print("The Column you inputed does not exist.")
-            return False
-    
-    safe_columns = [x for x in column_list if x not in user_input_columns]
-
-    user_var_name = input("Input a name for the variable column. If nothing is inserted, a default name will be used.")
-    if user_var_name == "" :
-        user_var_name = "code"
-
-    user_value_name = input("Input a name for the value column. If nothing is inserted, a default name will be used.")
-    if user_value_name == "" :
-       user_value_name = "data"
-
-    modified_df = pd.melt(modified_df, id_vars = safe_columns, value_vars = user_input_columns, value_name = user_value_name, var_name = user_var_name)
+    modified_df = pd.melt(modified_df, id_vars = safe_columns, value_vars = unpivot_columns, value_name = value_column_name, var_name = variable_column_name)
     print(modified_df.head(5))        
 
 def pivot(value_column, pivot_column):

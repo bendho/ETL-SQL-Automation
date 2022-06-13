@@ -107,6 +107,30 @@ def pivot_columns():
  
     mf.pivot(user_input_value, user_input_column)
 
+def unpivot():
+    modified_df = mf.return_modified_df()
+
+    column_list = modified_df.columns.values.tolist()
+    print(column_list)
+
+    user_input_columns = input("Please enter the coulumns that you want to unpivot in a space seperated list... ")
+    user_input_columns = user_input_columns.split(" ")
+
+    for column_item in user_input_columns:
+        if column_item not in column_list:
+            print("The Column you inputed does not exist.")
+            return False
+
+    user_var_name = input("Input a name for the variable column. If nothing is inserted, a default name will be used.")
+    if user_var_name == "" :
+        user_var_name = "code"
+
+    user_value_name = input("Input a name for the value column. If nothing is inserted, a default name will be used.")
+    if user_value_name == "" :
+       user_value_name = "data"
+
+    mf.unpivot(user_input_columns, user_var_name, user_value_name)    
+
 #Main Menu function
 def csv_menu():
     print("0. Exit.")
@@ -116,6 +140,7 @@ def csv_menu():
     print("4. Match the imported DataFrame with a reference table")
     print("5. Swap columns from the current modified DF")
     print("6. Pivot Columns")
+    print("7. Unpivot Columns")
 
     menu_choice = input("choose a menu.... ")
 
@@ -134,11 +159,13 @@ def csv_menu():
             swap_columns()
         case '6':
             pivot_columns()
+        case '7':
+            unpivot()
 
     print(" ")
     csv_menu() 
 
-#This is used as a launchingpad to reach other parts of the program
+#This is used as a launchpad to reach other parts of the program
 def menu_function() :
     csv_menu()
 
