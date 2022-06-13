@@ -210,7 +210,7 @@ def unpivot():
     modified_df = pd.melt(modified_df, id_vars = safe_columns, value_vars = user_input_columns, value_name = user_value_name, var_name = user_var_name)
     print(modified_df.head(5))        
 
-def pivot():
+def pivot(value_column, pivot_column):
     global modified_df
 
     if modified_df is False:
@@ -218,27 +218,14 @@ def pivot():
         return False
 
     column_list = modified_df.columns.values.tolist()
-    print(column_list)
+   
+   #This is here so that the DataFrame isn't just isolated to to the pivoted columns 
+    safe_columns = [x for x in column_list if x not in pivot_column]
+    safe_columns = [x for x in safe_columns if x not in value_column]
 
-    user_input_value = input("Please enter value column that you'd like to pivot... ")
-
-    if user_input_value not in column_list:
-        print("The Column you inputed does not exist.")
-        return False
- 
-    user_input_column = input("Please enter the column that you'd like to turn into rows.... ")
-
-    if user_input_column not in column_list:
-        print("The Column you inputed does not exist.")
-        return False
-    
-    safe_columns = [x for x in column_list if x not in user_input_column]
-    safe_columns = [x for x in safe_columns if x not in user_input_value]
-
-    modified_df = modified_df.pivot_table(index=safe_columns, values = user_input_value, columns= user_input_column)            
+    modified_df = modified_df.pivot_table(index = safe_columns, values = value_column, columns = pivot_column)            
 
     print(modified_df.head(5))
-
 
 def prune_df_rows():
     global modified_df

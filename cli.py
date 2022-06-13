@@ -82,6 +82,31 @@ def swap_columns():
     column_b = input("input Column B to swap... ")
 
     mf.swap_columns(column_a, column_b)
+
+def pivot_columns():
+    modified_df = mf.return_modified_df()
+
+    if modified_df is False:
+        print("There is not a database to export. Please import a file.")
+        return False
+
+    column_list = modified_df.columns.values.tolist()
+    print(column_list)
+
+    user_input_value = input("Please enter value column that you'd like to pivot... ")
+
+    if user_input_value not in column_list:
+        print("The Column you inputed does not exist.")
+        return False
+ 
+    user_input_column = input("Please enter the column that you'd like to turn into rows.... ")
+
+    if user_input_column not in column_list:
+        print("The Column you inputed does not exist.")
+        return False
+ 
+    mf.pivot(user_input_value, user_input_column)
+
 #Main Menu function
 def csv_menu():
     print("0. Exit.")
@@ -90,6 +115,7 @@ def csv_menu():
     print("3. Export a DataFrame to a CSV")
     print("4. Match the imported DataFrame with a reference table")
     print("5. Swap columns from the current modified DF")
+    print("6. Pivot Columns")
 
     menu_choice = input("choose a menu.... ")
 
@@ -106,6 +132,8 @@ def csv_menu():
             match_df()
         case '5':
             swap_columns()
+        case '6':
+            pivot_columns()
 
     print(" ")
     csv_menu() 
