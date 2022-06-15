@@ -29,14 +29,10 @@ def select_ref():
     mf.select_reference(import_path)
 
 #Import and Export functions 
-def import_csv():
+def import_table():
     inputed_file = input("Input the path for the file that you want to use... ")
 
-    if not ".csv" in inputed_file:
-        print("the file you picked was not a csv. please use a csv.")
-        return False
-
-    mf.import_csv(inputed_file)
+    mf.import_table(inputed_file)
 
 def export_csv():
     if mf.check_modified_df() == False:
@@ -194,7 +190,7 @@ def isolate_rows():
 def csv_menu():
     print("0. Exit.")
     print("1. Chose a dataframe to use as a reference")
-    print("2. Import a CSV file to transform")
+    print("2. Import a file to transform")
     print("3. Export a DataFrame to a CSV")
     print("4. Match the imported DataFrame with a reference table")
     print("5. Swap columns from the current modified DF")
@@ -212,7 +208,7 @@ def csv_menu():
         case '1':
             select_ref()
         case '2':
-            import_csv()
+            import_table()
         case '3':
             export_csv()
         case '4':

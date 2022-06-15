@@ -51,15 +51,24 @@ def select_reference(input_path):
     print(input_path + " is now the current reference file")
 
 #Imports a file
-def import_csv(inputed_file):
+def import_table(inputed_file):
 
     global imported_df
     global modified_df
 
-    imported_df = pd.read_csv(inputed_file, encoding="latin-1", on_bad_lines='skip')
-    modified_df = imported_df 
+    if ".csv" in inputed_file:
+        imported_df = pd.read_csv(inputed_file, encoding="latin-1", on_bad_lines='skip')
+    elif ".json" in inputed_file:
+        imported_df = pd.read_json(inputed_file)
+    elif ".xlsx" in inputed_file:
+        imported_df = pd.read_excel(inputed_file)
+    else:
+        print("The file you inputed either does not exist or can not be imported. ")
+        return  
 
-    print("The DataFrame has been imported")
+    modified_df = imported_df #Stores a clean copy of the imported dataframe. 
+
+    print("The table has been successfully imported")
 
 #Exports a CSV
 def export_csv(export_path, fill_null = True):
