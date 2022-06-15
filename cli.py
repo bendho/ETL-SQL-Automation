@@ -154,7 +154,6 @@ def sort_by_column():
     print(column_list)
     sort_choice = input("Enter the column that you would like to sort by...")
 
-    sort_choice.casefold() 
     mf.sort_columns(sort_choice)
 
 def prune_columns():
@@ -170,7 +169,27 @@ def prune_columns():
 
     mf.prune_df_columns(prune_choices)
 
+def isolate_rows():
+    if mf.check_modified_df() == False:
+        return
+    
+    modified_df = mf.return_modified_df()
+    column_list = modified_df.columns.values.tolist()
+    
+    print(column_list)
+    prune_column = input("Input a column to look at when isolating data. ")
 
+    if not prune_column in column_list:
+        print("The column you inputed does not exist.")
+        return
+    
+    prune_data = input("Enter data from the selected column to isolate rows by, use a space to seperate data ")
+    prune_data = prune_data.split(" ")
+
+    if len(prune_data) == 0:
+        print("You didn't enter any data to try and isolate")
+
+    mf.isolate_df_rows(prune_column, prune_data)
 #Main Menu function
 def csv_menu():
     print("0. Exit.")
@@ -182,6 +201,7 @@ def csv_menu():
     print("6. Pivot Columns")
     print("7. Unpivot Columns")
     print("8. Prune Columns")
+    print("9. Isolate Rows.")
     print("10. Sort by Column.")
 
     menu_choice = input("choose a menu.... ")
@@ -205,6 +225,8 @@ def csv_menu():
             unpivot()
         case '8':
             prune_columns()
+        case '9':
+            isolate_rows()
         case '10':
             sort_by_column()
 

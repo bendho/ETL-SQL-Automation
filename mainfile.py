@@ -162,10 +162,32 @@ def prune_df_columns(columns_to_prune):
     column_list = modified_df.columns.values.tolist()
 
     if not all(item in column_list for item in columns_to_prune):
-        print("Not all of the itmes that you decided to prune existed")
+        print("You entered columns that don't exist")
         return False
         
     modified_df = isolate_data(modified_df, columns_to_prune)
+    print(modified_df.head(5))
+
+def isolate_df_rows(prune_column, prune_choices):
+    global modified_df
+
+    if check_modified_df() == False:
+        return   
+
+    column_list = modified_df.columns.values.tolist()
+    if not (prune_column in column_list):
+        return
+    
+    prune_df = pd.DataFrame(prune_choices, columns=["temp"])
+    
+    if prune_df.empty:
+        print("The data that has been entered has lead to nothing being isolated, the active DataFrame has not been modified.")
+        return
+
+    #There might be a better way to handle this, I could see this being ineffecient when dealing with larger data sets. 
+    modified_df = modified_df.merge(prune_df, left_on=prune_column, right_on=["temp"])
+    modified_df = modified_df.drop(columns=["temp"])
+
     print(modified_df.head(5))
 
 #swaps columns based off user input.
@@ -215,27 +237,6 @@ def pivot(value_column, pivot_column):
     safe_columns = [x for x in safe_columns if x in modified_df.columns]
 
     modified_df = modified_df.pivot_table(index = safe_columns, values = value_column, columns = pivot_column)            
-
-    print(modified_df.head(5))
-
-def prune_df_rows():
-    global modified_df
-
-    if check_modified_df() == False:
-        return   
- 
-    column_list = modified_df.columns.values.tolist()
-    print(column_list)
-    prune_column = input("Enter the column that you would like to use to prune data form. ")
-
-    prune_choices = input("Enter the data that you want to prune from the selected column. Use spaces to seperate. ")
-    prune_choices = prune_choices.split(" ")
-    
-    prune_df = pd.DataFrame(prune_choices, columns=["temp"])
-
-    #There might be a better way to handle this, I could see this being ineffecient when dealing with larger data sets. 
-    modified_df = modified_df.merge(prune_df, left_on=prune_column, right_on=["temp"])
-    modified_df = modified_df.drop(columns=["temp"])
 
     print(modified_df.head(5))
 
