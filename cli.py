@@ -143,6 +143,20 @@ def unpivot():
 
     mf.unpivot(user_input_columns, user_var_name, user_value_name)    
 
+def sort_by_column():    
+    if mf.check_modified_df() == False:
+        print("There is not a DataFrame to try and sort")
+        return
+
+    modified_df = mf.return_modified_df()
+    column_list = modified_df.columns.values.tolist()
+
+    print(column_list)
+    sort_choice = input("Enter the column that you would like to sort by...")
+
+    sort_choice.casefold() 
+    mf.sort_columns(sort_choice)
+
 def prune_columns():
     if mf.check_modified_df() == False:
         return   
@@ -168,6 +182,7 @@ def csv_menu():
     print("6. Pivot Columns")
     print("7. Unpivot Columns")
     print("8. Prune Columns")
+    print("10. Sort by Column.")
 
     menu_choice = input("choose a menu.... ")
 
@@ -190,6 +205,8 @@ def csv_menu():
             unpivot()
         case '8':
             prune_columns()
+        case '10':
+            sort_by_column()
 
     print(" ")
     csv_menu() 

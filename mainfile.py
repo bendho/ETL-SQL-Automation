@@ -77,19 +77,20 @@ def export_csv(export_path, fill_null = True):
     print("csv was successfuly exported to " + export_path)
 
 
-def sort_columns():
+def sort_columns(index_column):
     global modified_df
 
-    modified_df = modified_df.reset_index(drop=True)
-    print(modified_df)
+    if check_modified_df() == False:
+        return
 
     column_list = modified_df.columns.values.tolist()
-    print(" ")
-    print(column_list)
-    
-    sort_choice = input("Enter the column that you would like to sort by...")
-        
-    modified_df = modified_df.sort_values(by=[sort_choice], ascending=True)
+
+    if(index_column not in column_list):
+        print("The column to sort by does not exist.")
+        return
+
+    modified_df = modified_df.reset_index(drop=True)
+    modified_df = modified_df.sort_values(by=[index_column], ascending=True)
 
     print(modified_df.head(5))
 
@@ -232,8 +233,8 @@ def prune_df_rows():
     
     prune_df = pd.DataFrame(prune_choices, columns=["temp"])
 
+    #There might be a better way to handle this, I could see this being ineffecient when dealing with larger data sets. 
     modified_df = modified_df.merge(prune_df, left_on=prune_column, right_on=["temp"])
-
     modified_df = modified_df.drop(columns=["temp"])
 
     print(modified_df.head(5))
