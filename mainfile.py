@@ -85,24 +85,6 @@ def export_csv(export_path, fill_null = True):
 
     print("csv was successfuly exported to " + export_path)
 
-
-def sort_columns(index_column):
-    global modified_df
-
-    if check_modified_df() == False:
-        return
-
-    column_list = modified_df.columns.values.tolist()
-
-    if(index_column not in column_list):
-        print("The column to sort by does not exist.")
-        return
-
-    modified_df = modified_df.reset_index(drop=True)
-    modified_df = modified_df.sort_values(by=[index_column], ascending=True)
-
-    print(modified_df.head(5))
-
 #Joins the currnet modified_df to the original df and sets the modified_df as the result
 def merge_with_import():
     global imported_df
@@ -123,6 +105,39 @@ def merge_with_import():
 
     modified_df = imported_df.merge(modified_df, left_on=selected_import_column, right_on=selected_current_column)
     modified_df = modified_df.drop(columns=[selected_current_column])
+
+    print(modified_df.head(5))
+
+def sort_columns(index_column):
+    global modified_df
+
+    if check_modified_df() == False:
+        return
+
+    column_list = modified_df.columns.values.tolist()
+
+    if(index_column not in column_list):
+        print("The column to sort by does not exist.")
+        return
+
+    modified_df = modified_df.reset_index(drop=True)
+    modified_df = modified_df.sort_values(by=[index_column], ascending=True)
+
+    print(modified_df.head(5))
+
+def add_leading_zeros(added_zeros, column_to_change):
+    global modified_df
+
+    if check_modified_df() == False:
+        return
+
+    column_list = modified_df.columns.tolist()    
+    if column_to_change not in column_list:
+        print("The column that is being modified doesn't exist")
+        return
+
+    modified_df[column_to_change] = modified_df[column_to_change].astype("string")
+    modified_df[column_to_change] = modified_df[column_to_change].str.zfill(added_zeros)
 
     print(modified_df.head(5))
 

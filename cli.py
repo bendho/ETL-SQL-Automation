@@ -186,6 +186,30 @@ def isolate_rows():
         print("You didn't enter any data to try and isolate")
 
     mf.isolate_df_rows(prune_column, prune_data)
+
+def add_zeros():
+    if mf.check_modified_df() == False:
+        return
+
+    modified_df = mf.return_modified_df()
+    column_list = modified_df.columns.values.tolist()
+ 
+    added_zeros = input("Input a number to use ")
+
+    try:
+        added_zeros = int(added_zeros)
+    except ValueError:
+        print("The value you entered was not a number")
+        return
+    
+    print(column_list)
+    changed_column = input("What column do you want to add leading zeros to? ")
+
+    if changed_column not in column_list:
+        print("You entered a column that does not exist")
+        return
+
+    mf.add_leading_zeros(added_zeros, changed_column)
 #Main Menu function
 def csv_menu():
     print("0. Exit.")
@@ -199,6 +223,7 @@ def csv_menu():
     print("8. Prune Columns")
     print("9. Isolate Rows.")
     print("10. Sort by Column.")
+    print("11. Add leading zeros.")
 
     menu_choice = input("choose a menu.... ")
 
@@ -225,6 +250,8 @@ def csv_menu():
             isolate_rows()
         case '10':
             sort_by_column()
+        case '11':
+            add_zeros()
 
     print(" ")
     csv_menu() 
